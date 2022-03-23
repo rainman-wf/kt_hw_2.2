@@ -11,16 +11,12 @@ class WallServiceClass {
             }
         )
         posts += newPost
-        println("add " + newPost.id)
         return posts.last()
     }
 
     fun update(post: Post): Boolean {
         val index = findPost(post)
         if (index == -1) return false
-
-        println("iterate " + post.id)
-        println("find index $index")
         val newPost = post.copy(text = post.text)
         posts[index] = newPost
         return true
