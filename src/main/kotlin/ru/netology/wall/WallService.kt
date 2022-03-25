@@ -1,36 +1,25 @@
 package ru.netology.wall
 
 object WallService {
-    private var posts = emptyArray<Post>()
-
+    private var posts = HashMap<Int?, Post?>()
+    private var postId: Int = 0
 
     fun add(post: Post): Post {
-        val newPost = post.copy(
-            id = if (posts.isEmpty()) 1 else {
-                posts.last().id + 1
-            }
-        )
-        posts += newPost
-        println("add " + newPost.id)
-        return posts.last()
+        val newPost = post.copy(id = postId)
+        posts[postId] = newPost
+        postId++
+        return newPost
     }
 
     fun update(post: Post): Boolean {
-        if (findPost(post) != null) {
-            println("iterate " + post.id)
-            val newPost = post.copy(text = post.text)
-            posts[posts.indexOf(post)] = newPost
+
+        if (posts.containsKey(post.id)) {
+            val newPost = posts[post.id]?.copy(text = post.text)
+            posts[post.id] = newPost
             return true
         }
         return false
     }
 
-    private fun findPost(post: Post): Post? {
-        for (p in posts) {
-            if (p.id == post.id) {
-                return post
-            }
-        }
-        return null
-    }
+    fun getPostById (id: Int?) = posts[id]
 }

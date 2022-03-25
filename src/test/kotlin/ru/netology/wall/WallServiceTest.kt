@@ -9,23 +9,23 @@ class WallServiceTest {
     @Test
     fun add() {
 
-        val service = WallServiceClass()
+        val service = WallService
 
         val post = service.add(Post(1, 2, "Post #1"))
 
-        assertEquals(post.id != 0, true)
+        assertEquals(service.getPostById(2), post)
     }
 
     @Test
     fun updateExisting_successful() {
 
-        val service = WallServiceClass()
+        val service = WallService
 
         service.add(Post(1, 2, "Post #1"))
         service.add(Post(1, 3, "Post #2"))
         service.add(Post(1, 5, "Post #3"))
 
-        val post = service.update(Post(1, 4, "new Post #3", 2))
+        val post = service.update(Post(1, 4, "new Post #2", 2))
 
         assertTrue(post)
     }
@@ -33,7 +33,7 @@ class WallServiceTest {
     @Test
     fun updateExisting_failed() {
 
-        val service = WallServiceClass()
+        val service = WallService
 
         service.add(Post(1, 2, "Post #1"))
         service.add(Post(1, 3, "Post #2"))

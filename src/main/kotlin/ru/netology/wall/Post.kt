@@ -8,7 +8,7 @@ data class Post(
     val fromId: Int,
     val text: String,
 
-    val id: Int = 0,
+    val id: Int? = null,
     val date: Long = Date().time,
     val likes: Int = 0,
     val views: Int = 0,
