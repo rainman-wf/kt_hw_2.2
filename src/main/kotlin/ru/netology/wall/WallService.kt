@@ -13,13 +13,12 @@ object WallService {
 
     fun update(post: Post): Boolean {
 
-        if (posts.containsKey(post.id)) {
-            val newPost = posts[post.id]?.copy(text = post.text)
-            posts[post.id] = newPost
-            return true
-        }
-        return false
+        val newPost = posts[post.id]?.copy(text = post.text, attachments = post.attachments) ?: return false
+        posts[post.id] = newPost
+        return true
+
     }
 
-    fun getPostById (id: Int?) = posts[id]
+    fun getPostById(id: Int?) = posts[id]
+
 }
