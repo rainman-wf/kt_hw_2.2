@@ -14,15 +14,15 @@ class WallServiceTest {
 
         val fromId = 1
         val text = "Video + Photo"
-        val video = Video(1, "cats", 400, 300, 1920, 1080, 244)
-        val photo = Photo(2, "png", 400, 300, 1280, 720)
+        val video = Attachment.Video(1, "cats", 400, 300, 1920, 1080, 244)
+        val photo = Attachment.Photo(2, "png", 400, 300, 1280, 720)
 
         val post = service.add(
             Post(
                 ownerId = ownerId,
                 fromId = fromId,
                 text = text,
-                attachments = arrayListOf(VideoAttachment(video), PhotoAttachment(photo))
+                attachments = arrayListOf(video, photo)
             )
         )
 
@@ -36,8 +36,8 @@ class WallServiceTest {
         val text = "Two audio"
         val existingPostId = 0
 
-        val audio1 = Audio(1, "LP", "In the end", true, 180)
-        val audio2 = Audio(2)
+        val audio1 = Attachment.Audio(1, "LP", "In the end", true, 180)
+        val audio2 = Attachment.Audio(2)
 
         service.add(Post(ownerId, fromId, "text"))
 
@@ -47,7 +47,7 @@ class WallServiceTest {
                 fromId = fromId,
                 text = text,
                 id = existingPostId,
-                attachments = arrayListOf(AudioAttachment(audio1), AudioAttachment(audio2))
+                attachments = arrayListOf(audio1, audio2)
             )
         )
 
@@ -61,11 +61,11 @@ class WallServiceTest {
         val text = "Doc + Url"
         val existingPostId = 15
 
-        val doc = Doc(1, "Students list", 32500, "xls", 25)
-        val url = Url(
+        val doc = Attachment.Doc(1, "Students list", 32500, "xls", 25)
+        val url = Attachment.Url(
             "https://netology.ru/",
             "Netology",
-            photo = Photo(
+            photo = Attachment.Photo(
                 1,
                 "png",
                 400,
@@ -81,7 +81,7 @@ class WallServiceTest {
                 fromId = fromId,
                 text = text,
                 id = existingPostId,
-                attachments = arrayListOf(DocAttachment(doc), UrlAttachment(url))
+                attachments = arrayListOf(doc, url)
             )
         )
 
