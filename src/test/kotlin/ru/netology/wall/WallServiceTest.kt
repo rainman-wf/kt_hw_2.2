@@ -6,80 +6,23 @@ import org.junit.Assert.*
 
 class WallServiceTest {
 
-    @Test
-    fun add() {
-
-        val service = WallService
-
-        val post = service.add(Post(1, 2, "Post #1"))
-
-        assertEquals(service.getPostById(post.id), post)
-    }
+    private val service = WallService
+    private val ownerId = 1
 
     @Test
-    fun updateExisting_successful() {
+    fun addNewPost_video_photo() {
 
-        val service = WallService
-
-        service.add(Post(1, 2, "Post #1"))
-        service.add(Post(1, 3, "Post #2"))
-        service.add(Post(1, 5, "Post #3"))
-
-        val post = service.update(Post(1, 4, "new Post #2", 2))
-
-        assertTrue(post)
-    }
-
-    @Test
-    fun updateExisting_failed() {
-
-        val service = WallService
-
-        service.add(Post(1, 2, "Post #1"))
-        service.add(Post(1, 3, "Post #2"))
-        service.add(Post(1, 5, "Post #3"))
-
-        val post = service.update(Post(1, 4, "new Post #3", 15))
-
-        assertFalse(post)
-    }
-
-    @Test
-    fun updateExisting_null() {
-
-        val service = WallService
-
-        service.add(Post(1, 2, "Post #1"))
-        service.add(Post(1, 3, "Post #2"))
-        service.add(Post(1, 5, "Post #3"))
-
-        val post = service.update(Post(1, 4, "new Post #3", 15))
-
-        assertFalse(post)
-    }
-
-    @Test
-    fun addNewAttachment() {
-        val service = WallService
+        val fromId = 1
+        val text = "Video + Photo"
+        val video = Video(1, "cats", 400, 300, 1920, 1080, 244)
+        val photo = Photo(2, "png", 400, 300, 1280, 720)
 
         val post = service.add(
             Post(
-                1,
-                2,
-                "One Video",
-                attachments = arrayListOf(
-                    VideoAttachment(
-                        Video(
-                            1,
-                            "cats",
-                            400,
-                            300,
-                            1920,
-                            1080,
-                            244
-                        )
-                    )
-                )
+                ownerId = ownerId,
+                fromId = fromId,
+                text = text,
+                attachments = arrayListOf(VideoAttachment(video), PhotoAttachment(photo))
             )
         )
 
@@ -87,23 +30,24 @@ class WallServiceTest {
     }
 
     @Test
-    fun editAttachment() {
-        val service = WallService
+    fun update_successful_add_audio() {
+
+        val fromId = 2
+        val text = "Two audio"
+        val existingPostId = 0
+
+        val audio1 = Audio(1, "LP", "In the end", true, 180)
+        val audio2 = Audio(2)
+
+        service.add(Post(ownerId, fromId, "text"))
 
         val post = service.update(
             Post(
-                1,
-                2,
-                "Two photo",
-                4,
-                attachments = arrayListOf(
-                    PhotoAttachment(
-                        Photo(1, "png", 400, 300, 1920, 1080)
-                    ),
-                    PhotoAttachment(
-                        Photo(2, "png", 400, 300, 1280, 720)
-                    )
-                )
+                ownerId = ownerId,
+                fromId = fromId,
+                text = text,
+                id = existingPostId,
+                attachments = arrayListOf(AudioAttachment(audio1), AudioAttachment(audio2))
             )
         )
 
@@ -111,72 +55,36 @@ class WallServiceTest {
     }
 
     @Test
-    fun addNewAudio() {
-        val service = WallService
+    fun update_failed_doc_url() {
 
-        val post = service.add(
-            Post(
+        val fromId = 3
+        val text = "Doc + Url"
+        val existingPostId = 15
+
+        val doc = Doc(1, "Students list", 32500, "xls", 25)
+        val url = Url(
+            "https://netology.ru/",
+            "Netology",
+            photo = Photo(
                 1,
-                2,
-                "Two audio",
-                attachments = arrayListOf(
-                    AudioAttachment(Audio(1, "LP", "In the end", true, 180)),
-                    AudioAttachment(Audio(2))
-                )
+                "png",
+                400,
+                300,
+                1920,
+                1080
             )
         )
 
-        assertEquals(service.getPostById(post.id)?.attachments?.get(0)?.type, post.attachments[0].type)
-    }
-
-    @Test
-    fun editDoc() {
-        val service = WallService
-
         val post = service.update(
             Post(
-                1,
-                2,
-                "Two photo",
-                4,
-                attachments = arrayListOf(
-                    DocAttachment(Doc(1, "Students list", 32500, "xls", 25))
-                )
+                ownerId = ownerId,
+                fromId = fromId,
+                text = text,
+                id = existingPostId,
+                attachments = arrayListOf(DocAttachment(doc), UrlAttachment(url))
             )
         )
 
         assertFalse(post)
-    }
-
-    @Test
-    fun addUrl() {
-        val service = WallService
-
-        val post = service.add(
-            Post(
-                1,
-                2,
-                "Two photo",
-                4,
-                attachments = arrayListOf(
-                    UrlAttachment(
-                        Url(
-                            "https://netology.ru/",
-                            "Netology",
-                            photo = Photo(
-                                1,
-                                "png",
-                                400,
-                                300,
-                                1920,
-                                1080
-                            )
-                        )
-                    )
-                )
-            )
-        )
-
-        assertEquals(service.getPostById(post.id)?.attachments, post.attachments)
     }
 }

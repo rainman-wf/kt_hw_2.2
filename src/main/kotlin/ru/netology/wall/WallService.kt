@@ -6,8 +6,7 @@ object WallService {
 
     fun add(post: Post): Post {
         val newPost = post.copy(id = postId)
-        posts[postId] = newPost
-        postId++
+        posts[postId++] = newPost
         return newPost
     }
 
@@ -20,5 +19,4 @@ object WallService {
     }
 
     fun getPostById(id: Int?) = posts[id]
-
 }
