@@ -2,6 +2,7 @@ package ru.netology.wall
 
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 data class Post(
 
@@ -13,7 +14,24 @@ data class Post(
     val date: Long = Date().time,
     val likes: Int = 0,
     val views: Int = 0,
-    val attachments: ArrayList<Attachment> = ArrayList()
+    val attachments: ArrayList<Attachment> = ArrayList(),
+    val comments: HashMap<Int, Comment> = HashMap(),
+    val reports: ArrayList<ReportComment> = ArrayList()
+)
+
+data class Comment(
+    val id: Int = 0,
+    val postId: Int,
+    val fromId: Int,
+    val text: String?,
+    val date: Long = Date().time,
+
+)
+
+data class ReportComment(
+    val ownerId: Int?,
+    val commentID: Int?,
+    val reason: Int
 )
 
 interface Attachment {
@@ -30,15 +48,15 @@ data class PhotoAttachment(
 
 data class AudioAttachment(
     override val type: Audio
-): Attachment
+) : Attachment
 
 data class DocAttachment(
     override val type: Doc
-): Attachment
+) : Attachment
 
 data class UrlAttachment(
     override val type: Url
-): Attachment
+) : Attachment
 
 data class Photo(
     val id: Int,

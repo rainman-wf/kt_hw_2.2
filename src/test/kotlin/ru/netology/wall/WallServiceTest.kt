@@ -9,6 +9,14 @@ class WallServiceTest {
     private val service = WallService
     private val ownerId = 1
 
+    private val firstPost = service.add(
+        Post(
+            ownerId = ownerId,
+            fromId = 1,
+            text = "post"
+        )
+    )
+
     @Test
     fun addNewPost_video_photo() {
 
@@ -86,5 +94,52 @@ class WallServiceTest {
         )
 
         assertFalse(post)
+    }
+
+    @Test(expected = PostNotFoundException::class)
+    fun shouldThrow() {
+        service.createComment(Comment(postId = 5, fromId = 12, text = "text"))
+    }
+
+    @Test
+    fun addComment() {
+        val comment = service.createComment(Comment(postId = 0, fromId = ownerId, text = "text"))
+        assertEquals(comment, firstPost.comments[0])
+    }
+
+    @Test
+    fun sendReport() {
+
+        val comment = service.createComment(Comment(postId = 0, fromId = ownerId, text = "text"))
+        val commentID = comment.id
+        val commentOwnerID = comment.fromId
+        val reason = 1
+
+        val result = service.sendCommentReport(service.getPostById(0), ReportComment(commentOwnerID, commentID, reason))
+
+        assertEquals(result, 1)
+
+    }
+
+    @Test (expected = CommentNotFoundException::class)
+    fun sendReport_comment_not_found() {
+
+        val comment = service.createComment(Comment(postId = 0, fromId = ownerId, text = "text"))
+        val commentID = 12
+        val commentOwnerID = comment.fromId
+        val reason = 1
+
+        service.sendCommentReport(service.getPostById(0), ReportComment(commentOwnerID, commentID, reason))
+    }
+
+    @Test (expected = InvalidReasonCodeException::class)
+    fun sendReport_invalid_reason() {
+
+        val comment = service.createComment(Comment(postId = 0, fromId = ownerId, text = "text"))
+        val commentID = comment.id
+        val commentOwnerID = comment.fromId
+        val reason = 12
+
+        service.sendCommentReport(service.getPostById(0), ReportComment(commentOwnerID, commentID, reason))
     }
 }
